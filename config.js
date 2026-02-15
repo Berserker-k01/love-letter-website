@@ -1,51 +1,55 @@
-// Website Configuration - Centralized content management
+// Website Configuration 💖
 const CONFIG = {
   // Couple information
   couple: {
-    name1: 'Ms.Wang',
-    name2: 'Mr.Qi',
-    connector: '和',
-    together: '在一起'
+    name1: 'Baika',
+    name2: 'Dani',
+    connector: '&',
+    together: 'PArce que c\'était écrit...',
   },
-  
-  // Memorial date
-  memorialDate: '2017-12-25T00:00:00',
-  
+
+  // Date de rencontre/mariage (AAAA-MM-JJ T HH:MM:SS)
+  memorialDate: '2022-02-14T00:00:00',
+
   // Love letter content
   letter: {
     paragraph1: [
-      '哪天我老了，还跟和你热恋一样，',
-      '桌前给你发消息，',
-      '灯盏微黄，窗外风雨千墙，',
-      '半天酿出一句我想你了，',
-      '内心的原野，',
-      '时而流星追月，时而万马奔腾。'
+      'Ma Baika,',
+      '',
+      'Il y a des rencontres qui changent une vie,',
+      'et la nôtre est de celles-là.',
+      'La vie nous a parfois éloignés,',
+      'chacun perdu dans son propre monde,',
+      'mais mon cœur, lui, ne t’a jamais oubliée.'
     ],
     paragraph2: [
-      '有时有月亮，',
-      '我就做一个九曲十八弯的梦，',
-      '每个转角都与你有关，',
-      '你对我笑了一下，',
-      '醒来我就发上一天呆。'
+      'Aujourd’hui, nous célébrons notre histoire.',
+      'Deux années de rires, de défis et de complicité.',
+      'Même si parfois tu as ton caractère 😌,',
+      'sache que je ne voudrais être nulle part ailleurs.',
+      'Je serai toujours ton épaule, ton refuge,',
+      'dans les tempêtes comme dans les jours de soleil.'
     ],
     paragraph3: [
-      '现在我在长满星星的夜里，',
-      '阶前红豆坠满枝，',
-      '醉过知酒浓，',
-      '无物抵相思。'
+      'Je ne te promets pas la perfection,',
+      'mais je te promets d’être là, chaque jour.',
+      'Pour te soutenir, te faire rire, te protéger.',
+      'Avancer main dans la main avec toi,',
+      'c’est ma plus belle aventure.',
+      '',
+      'Je t’aime. ❤️'
     ]
   },
-  
-  // Time display text
-  time: {
-    prefix: '第 ',
-    day: '天',
-    hour: '小时',
-    minute: '分钟',
-    second: '秒'
-  },
-  
-  // Text on seed heart
-  seedText: 'Miss You'
-};
 
+  // Time Display Text
+  time: {
+    prefix: 'Depuis ',
+    day: 'jours,',
+    hour: 'heures,',
+    minute: 'min,',
+    second: 'sec'
+  },
+
+  // Text inside the starting heart
+  seedText: 'For Fabiola❤️'
+}

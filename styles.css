@@ -4,14 +4,17 @@
 :root {
   /* Colors */
   --bg-color: #ffe;
-  --text-color: #228567;
-  --name-color: #000;
-  --date-color: #808080;
+  --text-color: #2c3e50;
+  --name-color: #e74c3c;
+  --date-color: #7f8c8d;
+  --highlight-color: #e67e22;
 }
 
 /* ===========================
    Global Styles
    =========================== */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Nunito:wght@400;600&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -20,7 +23,7 @@
 
 body {
   background: var(--bg-color);
-  font: 14px/1.4 sans-serif;
+  font-family: 'Nunito', sans-serif;
   overflow: hidden;
 }
 
@@ -31,25 +34,81 @@ body {
   position: relative;
   width: 1100px;
   height: 680px;
+  margin: 0 auto;
+  /* Center the container */
 }
 
 #canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 1100px;
   height: 680px;
+  z-index: 1;
+  /* Tree in background relative to text */
 }
 
 /* ===========================
    Love Letter Content
    =========================== */
+/* ===========================
+   Love Letter Content
+   =========================== */
 #letter {
   position: absolute;
-  width: 400px;
-  height: 425px;
-  left: 60px;
-  top: 80px;
+  width: 440px;
+  /* Slightly wider */
+  height: 480px;
+  /* Fixed height to prevent overlap */
+  left: 50px;
+  top: 40px;
   display: none;
-  font-size: 16px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 24px;
+  /* Larger text */
+  line-height: 1.5;
   color: var(--text-color);
+  z-index: 10;
+
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.7);
+  /* More opaque for readability */
+  backdrop-filter: blur(4px);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+
+  /* Scrollable Content */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
+  /* Animation */
+  animation: fadeInUp 1s ease-out;
+}
+
+/* Custom Scrollbar */
+#letter::-webkit-scrollbar {
+  width: 8px;
+}
+
+#letter::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+#letter::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+#letter::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+#letter p {
+  margin-bottom: 25px;
 }
 
 /* ===========================
@@ -57,25 +116,108 @@ body {
    =========================== */
 #clock-box {
   position: absolute;
-  left: 60px;
-  top: 550px;
-  font-size: 28px;
+  left: 50px;
+  top: 540px;
+  /* Fixed position below the letter */
+  width: 500px;
+  /* Wider to overlap letter slightly (aesthetic) or fit content */
+  height: auto;
+  font-size: 24px;
   opacity: 0;
-  transition: opacity 0.5s;
+  transition: opacity 1s;
+  z-index: 20;
+  /* Above letter */
+  text-align: left;
+
+  /* No background for box itself to look integrated, or different style */
+  /* Giving it a pill shape glass effect */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(5px);
+  padding: 15px 30px;
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 #clock-text {
   color: var(--date-color);
+  font-size: 16px;
+  margin-bottom: 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 #clock-text .name {
   color: var(--name-color);
+  font-weight: 800;
+  font-size: 18px;
 }
 
 #clock {
-  margin-left: 48px;
+  font-family: 'Nunito', sans-serif;
+  color: #34495e;
+  margin-left: 0;
+  /* Reset margin */
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 
 #clock .digit {
-  font-size: 64px;
+  font-size: 32px;
+  /* Smaller digits to fit */
+  font-weight: 800;
+  color: var(--highlight-color);
+}
+
+/* ===========================
+   Animations
+   =========================== */
+
+/* Gentle Floating Animation for Heart/Content */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Make text appearing smoother */
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background-color: var(--text-color);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+
+  from,
+  to {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }

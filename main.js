@@ -56,32 +56,32 @@ class Seed {
     this.heart = { point, scale, color, figure: new Heart() };
     this.circle = { point, scale, color, radius: 5 };
   }
-  
-  draw = () => { 
-    this.drawHeart(); 
-    this.drawText(); 
+
+  draw = () => {
+    this.drawHeart();
+    this.drawText();
   };
-  
-  addPosition = (x, y) => { 
-    this.circle.point = this.circle.point.add(new Point(x, y)); 
+
+  addPosition = (x, y) => {
+    this.circle.point = this.circle.point.add(new Point(x, y));
   };
-  
+
   canMove = () => this.circle.point.y < this.tree.height + 20;
   canScale = () => this.heart.scale > 0.2;
-  
-  move = (x, y) => { 
-    this.clear(); 
-    this.drawCircle(); 
-    this.addPosition(x, y); 
+
+  move = (x, y) => {
+    this.clear();
+    this.drawCircle();
+    this.addPosition(x, y);
   };
-  
-  scale = (s) => { 
-    this.clear(); 
-    this.drawCircle(); 
-    this.drawHeart(); 
+
+  scale = (s) => {
+    this.clear();
+    this.drawCircle();
+    this.drawHeart();
     this.heart.scale *= s;
   };
-  
+
   drawHeart = () => {
     const { ctx } = this.tree;
     const { point, color, scale } = this.heart;
@@ -98,7 +98,7 @@ class Seed {
     ctx.fill();
     ctx.restore();
   };
-  
+
   drawCircle = () => {
     const { ctx } = this.tree;
     const { point, color, scale, radius } = this.circle;
@@ -112,7 +112,7 @@ class Seed {
     ctx.fill();
     ctx.restore();
   };
-  
+
   drawText = () => {
     const { ctx } = this.tree;
     const { point, color, scale } = this.heart;
@@ -132,14 +132,14 @@ class Seed {
     ctx.fillText(text, 23, 10);
     ctx.restore();
   };
-  
+
   clear = () => {
     const { ctx } = this.tree;
     const { point, scale } = this.circle;
     const w = 26 * scale, h = 26 * scale;
     ctx.clearRect(point.x - w, point.y - h, 4 * w, 4 * h);
   };
-  
+
   hover = (x, y) => {
     const pixel = this.tree.ctx.getImageData(x, y, 1, 1);
     return pixel.data[3] === 255;
@@ -159,7 +159,7 @@ class Footer {
     this.speed = speed;
     this.length = 0;
   }
-  
+
   draw() {
     const { ctx } = this.tree;
     const { point, height, length, width, speed } = this;
@@ -196,22 +196,22 @@ class Tree {
     this.initBranch();
     this.initBloom();
   }
-  
+
   initSeed() {
     const { x = this.width / 2, y = this.height / 2, color = "#FF0000", scale = 1 } = this.opt.seed || {};
     this.seed = new Seed(this, new Point(x, y), scale, color);
   }
-  
+
   initFooter() {
     const { width = this.width, height = 5, speed = 2 } = this.opt.footer || {};
     this.footer = new Footer(this, width, height, speed);
   }
-  
+
   initBranch() {
     this.branches = [];
     this.addBranches(this.opt.branch || []);
   }
-  
+
   initBloom() {
     const { num = 500, width = this.width, height = this.height } = this.opt.bloom || {};
     const figure = this.seed.heart.figure;
@@ -223,9 +223,9 @@ class Tree {
     this.blooms = [];
     this.bloomsCache = cache;
   }
-  
+
   toDataURL(type) { return this.canvas.toDataURL(type); }
-  
+
   draw(k) {
     const rec = this.record[k];
     if (!rec) return;
@@ -234,21 +234,21 @@ class Tree {
     this.ctx.putImageData(image, point.x, point.y);
     this.ctx.restore();
   }
-  
+
   addBranch(branch) { this.branches.push(branch); }
-  
+
   addBranches(branches) {
     branches.forEach(([x1, y1, x2, y2, x3, y3, r, l, c]) => {
       this.addBranch(new Branch(this, new Point(x1, y1), new Point(x2, y2), new Point(x3, y3), r, l, c));
     });
   }
-  
+
   removeBranch(branch) { this.branches = this.branches.filter((b) => b !== branch); }
   canGrow() { return this.branches.length > 0; }
   grow() { this.branches.forEach((b) => b?.grow()); }
   addBloom(bloom) { this.blooms.push(bloom); }
   removeBloom(bloom) { this.blooms = this.blooms.filter((b) => b !== bloom); }
-  
+
   createBloom(width, height, radius, figure, color, alpha, angle, scale, place, speed) {
     let x, y;
     while (true) {
@@ -259,19 +259,19 @@ class Tree {
       }
     }
   }
-  
+
   canFlower() { return this.bloomsCache.length > 0; }
-  
+
   flower(num) {
     const blooms = this.bloomsCache.splice(0, num);
     blooms.forEach((b) => this.addBloom(b));
     this.blooms.forEach((b) => b.flower());
   }
-  
+
   snapshot(k, x, y, width, height) {
     this.record[k] = { image: this.ctx.getImageData(x, y, width, height), point: new Point(x, y), width, height };
   }
-  
+
   move(k, x, y) {
     const rec = this.record[k || "move"];
     let { point, image, speed = 10, width, height } = rec;
@@ -285,23 +285,23 @@ class Tree {
     rec.speed = Math.max(speed * 0.95, 2);
     return i < x || j < y;
   }
-  
+
   jump() {
     // Only keep blooms that can fall (have place and speed)
     const blooms = this.blooms.filter(b => b.place && b.speed);
     this.blooms = blooms;
     blooms.forEach((b) => b.jump());
-    
+
     // Generate new falling blooms if needed
     if (blooms.length < 3) {
       const { width = this.width, height = this.height } = this.opt.bloom || {};
       const figure = this.seed.heart.figure;
       for (let i = 0; i < random(1, 2); i++) {
         this.blooms.push(this.createBloom(
-          width / 2 + width, height, 240, figure, 
-          `rgb(255,${random(0, 255)},${random(0, 255)})`, 
-          1, null, 1, 
-          new Point(random(-100, 600), 720), 
+          width / 2 + width, height, 240, figure,
+          `rgb(255,${random(0, 255)},${random(0, 255)})`,
+          1, null, 1,
+          new Point(random(-100, 600), 720),
           random(200, 300)
         ));
       }
@@ -325,7 +325,7 @@ class Branch {
     this.t = 1 / (length - 1);
     this.branchs = branchs;
   }
-  
+
   grow() {
     if (this.len <= this.length) {
       const p = bezier([this.point1, this.point2, this.point3], this.len * this.t);
@@ -337,7 +337,7 @@ class Branch {
       this.tree.addBranches(this.branchs);
     }
   }
-  
+
   draw(p) {
     const { ctx } = this.tree;
     ctx.save();
@@ -358,7 +358,7 @@ class Branch {
 // ===========================
 
 class Bloom {
-  constructor(tree, point, figure, color = `rgb(255,${random(0, 255)},${random(0, 255)})`, 
+  constructor(tree, point, figure, color = `rgb(255,${random(0, 255)},${random(0, 255)})`,
     alpha = random(0.3, 1), angle = random(0, 360), scale = 0.1, place, speed) {
     this.tree = tree;
     this.point = point;
@@ -370,14 +370,14 @@ class Bloom {
     this.speed = speed;
     this.figure = figure;
   }
-  
+
   // Bloom animation: grow from small to large
   flower = () => {
     this.draw();
     this.scale += 0.1;
     if (this.scale > 1) this.tree.removeBloom(this);
   };
-  
+
   draw = () => {
     const { ctx } = this.tree;
     ctx.save();
@@ -396,7 +396,7 @@ class Bloom {
     ctx.fill();
     ctx.restore();
   };
-  
+
   // Jump animation: fall down from top
   jump = () => {
     if (!this.place || !this.speed) return;
@@ -416,20 +416,45 @@ class Bloom {
 // UI Functions
 // ===========================
 
-const typewriter = async (el, speed = 75) => {
+// ===========================
+// UI Functions
+// ===========================
+
+const typewriter = async (el, speed = 150) => {
   el.style.display = "block";
   const str = el.innerHTML;
   let progress = 0;
   el.innerHTML = "";
-  const timer = setInterval(() => {
-    if (str.charAt(progress) === "<") progress = str.indexOf(">", progress) + 1;
-    else progress++;
-    el.innerHTML = `${str.substring(0, progress)}${progress & 1 ? "_" : ""}`;
-    if (progress >= str.length) {
-      clearInterval(timer);
-      el.innerHTML = str;
-    }
-  }, speed);
+
+  return new Promise((resolve) => {
+    const timer = setInterval(() => {
+      // Handle HTML tags (don't type them character by character)
+      if (str.charAt(progress) === "<") {
+        progress = str.indexOf(">", progress) + 1;
+      } else {
+        progress++;
+      }
+
+      // Update text with cursor
+      el.innerHTML = `${str.substring(0, progress)}${progress & 1 ? "_" : ""}`;
+
+      // Smooth auto-scroll
+      // Using scrollTo with behavior 'smooth' creates a nice gliding effect
+      // Only scroll if we are not already at the bottom to avoid fighting user
+      if (el.scrollHeight > el.clientHeight) {
+        el.scrollTo({
+          top: el.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+
+      if (progress >= str.length) {
+        clearInterval(timer);
+        el.innerHTML = str;
+        resolve();
+      }
+    }, speed);
+  });
 };
 
 const timeElapse = (date) => {
@@ -485,7 +510,7 @@ const AnimationConfig = {
   TREE_GROW_DELAY: 10,       // Delay between tree growth frames (ms)
   FLOWER_BLOOM_COUNT: 2,     // Number of flowers to bloom per frame
   FLOWER_BLOOM_DELAY: 10,    // Delay between flower bloom frames (ms)
-  TREE_MOVE_TARGET_X: 500,   // Target X position for tree movement
+  TREE_MOVE_TARGET_X: 470,   // Target X position (Limit is ~490 to keep 610px wide tree inside 1100px canvas)
   SNAPSHOT_LEFT_X: 240,      // Left snapshot X position
   SNAPSHOT_RIGHT_X: 500,     // Right snapshot X position
   SNAPSHOT_WIDTH: 610,       // Snapshot width
@@ -601,13 +626,13 @@ function startTimeUpdate(memorial) {
 document.addEventListener("DOMContentLoaded", async () => {
   // Initialize content from config
   initContent();
-  
+
   // Setup canvas
   const canvas = document.getElementById("canvas");
   const w = canvas.offsetWidth, h = canvas.offsetHeight;
   canvas.width = w;
   canvas.height = h;
-  
+
   // Tree configuration
   const opts = {
     seed: { x: w / 2 - 20, color: "rgb(190, 26, 37)", scale: 2 },
@@ -621,46 +646,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     bloom: { num: 700, width: 1080, height: 650 },
     footer: { width: 1200, height: 5, speed: 10 }
   };
-  
+
   // Initialize tree and components
   const tree = new Tree(canvas, w, h, opts);
   const { seed, footer } = tree;
-  
+
   // Setup responsive scaling
   let scaleFactor = scaleContent();
   window.addEventListener("resize", () => { scaleFactor = scaleContent(); });
-  
+
   // ===========================
   // Animation Sequence
   // ===========================
-  
+
   // Draw initial seed heart
   seed.draw();
-  
+
   // Phase 1: Wait for user to click the heart
   await waitForUserClick(seed, canvas, scaleFactor);
-  
+
   // Phase 2: Shrink the seed heart
   await animateSeedShrink(seed);
-  
+
   // Phase 3: Move seed down to ground
   await animateSeedMove(seed, footer);
-  
+
   // Phase 4: Grow tree from seed
   await animateTreeGrow(tree);
-  
+
   // Phase 5: Bloom flowers on the tree
   await animateFlowerBloom(tree);
-  
+
   // Phase 6: Move tree to the right side
   await animateTreeMove(tree, footer);
-  
+
   // Phase 7: Prepare background for continuous animation
   await prepareBackground(tree, canvas);
-  
+
   // Phase 8: Show love letter with typewriter effect and time counter
   const memorial = showLoveLetterAndTime();
-  
+
   // Phase 9 & 10: Start continuous animations
   startHeartJumpAnimation(tree);
   startTimeUpdate(memorial);
